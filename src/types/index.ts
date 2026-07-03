@@ -16,6 +16,12 @@ export type CategoryId =
   | 'supabase'
   | 'vercel'
   | 'css'
+  | 'net'
+  | 'security'
+  | 'cli'
+  | 'npm'
+  | 'html'
+  | 'debug'
 
 export interface Category {
   id: CategoryId

@@ -15,6 +15,12 @@ import { aiServices } from './ai-services'
 import { supabase } from './supabase'
 import { vercel } from './vercel'
 import { css } from './css'
+import { html } from './html'
+import { net } from './net'
+import { security } from './security'
+import { cli } from './cli'
+import { npm } from './npm'
+import { debug } from './debug'
 
 export { categories, categoryTitle } from './categories'
 
@@ -24,7 +30,9 @@ export const allEntries = [
   ...webdev,
   ...reactTs,
   ...jsBasics,
+  ...html,
   ...css,
+  ...net,
   ...flutter,
   ...kotlin,
   ...mobilePublish,
@@ -34,6 +42,10 @@ export const allEntries = [
   ...backendBaas,
   ...supabase,
   ...vercel,
+  ...security,
+  ...cli,
+  ...npm,
   ...qa,
+  ...debug,
   ...aiServices,
 ]
