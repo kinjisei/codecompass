@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Card } from '../../components/Card'
 import { Button } from '../../components/Button'
 import { allEntries, categoryTitle } from '../../content'
 import { getDueEntries, reviewEntry, type DueEntry } from '../../lib/srs'
-import type { Rating } from '../../types'
+import type { CategoryId, Rating } from '../../types'
 
 const ratingButtons: { rating: Rating; label: string; className: string }[] = [
   { rating: 'again', label: 'Снова', className: 'bg-red-500 hover:bg-red-400 text-white' },
@@ -13,16 +14,22 @@ const ratingButtons: { rating: Rating; label: string; className: string }[] = [
 ]
 
 export function CardsPage() {
+  const [params] = useSearchParams()
+  const category = params.get('category') as CategoryId | null
   const [queue, setQueue] = useState<DueEntry[]>([])
   const [index, setIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [reviewedCount, setReviewedCount] = useState(0)
 
   const load = useCallback(() => {
-    setQueue(getDueEntries(allEntries))
+    const pool = category
+      ? allEntries.filter((e) => e.categoryId === category)
+      : allEntries
+    setQueue(getDueEntries(pool))
     setIndex(0)
     setRevealed(false)
-  }, [])
+    setReviewedCount(0)
+  }, [category])
 
   useEffect(() => {
     load()
@@ -40,9 +47,19 @@ export function CardsPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header>
+      <header className="flex items-center justify-between gap-2">
         <h1 className="text-2xl font-bold">🧠 Карточки</h1>
+        {category && (
+          <Link to="/cards" className="text-sm font-medium text-sky-600 dark:text-sky-400">
+            Все темы
+          </Link>
+        )}
       </header>
+      {category && (
+        <p className="-mt-2 text-sm text-slate-500">
+          Тема: {categoryTitle(category)}
+        </p>
+      )}
 
       {current ? (
         <>
@@ -93,14 +110,25 @@ export function CardsPage() {
           <p className="mt-2 font-semibold">
             {reviewedCount > 0
               ? `Готово! Повторено терминов: ${reviewedCount}`
-              : 'Карточек к повторению нет'}
+              : category
+                ? 'В этой теме нет карточек к повторению'
+                : 'Карточек к повторению нет'}
           </p>
           <p className="mt-1 text-sm text-slate-500">
-            Загляни в «Глоссарий», чтобы почитать темы — новые термины появятся здесь.
+            {category
+              ? 'Вернись позже или разбери другие темы.'
+              : 'Загляни в «Глоссарий», чтобы почитать темы — новые термины появятся здесь.'}
           </p>
-          <Button variant="secondary" className="mt-4" onClick={load}>
-            Обновить
-          </Button>
+          <div className="mt-4 flex justify-center gap-2">
+            <Button variant="secondary" onClick={load}>
+              Обновить
+            </Button>
+            {category && (
+              <Link to="/cards">
+                <Button>Все темы</Button>
+              </Link>
+            )}
+          </div>
         </Card>
       )}
     </div>

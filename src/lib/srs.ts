@@ -119,13 +119,58 @@ export function reviewEntry(entryId: string, existing: ReviewState | undefined, 
   saveAll(states)
 }
 
-/** Прогресс для дашборда: сколько терминов всего / выучено / к повторению сейчас. */
-export function getStats(entries: GlossaryEntry[]): { total: number; due: number; learned: number } {
+export interface Progress {
+  /** Всего терминов. */
+  total: number
+  /** К повторению сейчас: новые (без истории) + просроченные. */
+  due: number
+  /** Изучено: термин хоть раз пройден (есть история повторения). Двигает полоску прогресса. */
+  studied: number
+  /** Выучено: термин перешёл в стадию review (закрепился через несколько повторений). */
+  learned: number
+}
+
+/**
+ * Прогресс для дашборда — общий и в разбивке по категориям.
+ * `due` считается без лимита (в отличие от очереди повторения), чтобы бейджи
+ * на главной показывали реальное число, а не обрезанное 30.
+ */
+export function getProgress(entries: GlossaryEntry[]): {
+  overall: Progress
+  byCategory: Record<string, Progress>
+} {
   const states = loadAll()
-  const learned = Object.values(states).filter((s) => s.state === 'review').length
-  return {
-    total: entries.length,
-    due: getDueEntries(entries, entries.length).length,
-    learned,
+  const now = new Date()
+  const overall: Progress = { total: 0, due: 0, studied: 0, learned: 0 }
+  const byCategory: Record<string, Progress> = {}
+
+  for (const entry of entries) {
+    const cat = (byCategory[entry.categoryId] ??= {
+      total: 0,
+      due: 0,
+      studied: 0,
+      learned: 0,
+    })
+    const state = states[entry.id]
+    const due = !state || new Date(state.due) <= now
+    const studied = Boolean(state)
+    const learned = state?.state === 'review'
+
+    cat.total++
+    overall.total++
+    if (due) {
+      cat.due++
+      overall.due++
+    }
+    if (studied) {
+      cat.studied++
+      overall.studied++
+    }
+    if (learned) {
+      cat.learned++
+      overall.learned++
+    }
   }
+
+  return { overall, byCategory }
 }
