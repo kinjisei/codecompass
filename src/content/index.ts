@@ -21,11 +21,16 @@ import { security } from './security'
 import { cli } from './cli'
 import { npm } from './npm'
 import { debug } from './debug'
+import { vibePractice } from './vibe-practice'
+import { qaTools } from './qa-tools'
+import { codeReading } from './code-reading'
+import { dbDeep } from './db-deep'
 
 export { categories, categoryTitle } from './categories'
 
 export const allEntries = [
   ...vibecoding,
+  ...vibePractice,
   ...git,
   ...webdev,
   ...reactTs,
@@ -42,10 +47,13 @@ export const allEntries = [
   ...backendBaas,
   ...supabase,
   ...vercel,
+  ...dbDeep,
   ...security,
   ...cli,
   ...npm,
   ...qa,
+  ...qaTools,
+  ...codeReading,
   ...debug,
   ...aiServices,
 ]

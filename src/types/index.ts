@@ -22,6 +22,10 @@ export type CategoryId =
   | 'npm'
   | 'html'
   | 'debug'
+  | 'vibe-practice'
+  | 'qa-tools'
+  | 'code-reading'
+  | 'db-deep'
 
 export interface Category {
   id: CategoryId
