@@ -1,51 +1,51 @@
 import { Link } from 'react-router-dom'
 import { Card } from '../../components/Card'
+import { ProgressRing } from '../../components/Progress'
+import { IconCheckCircle } from '../../components/icons'
 import { allCourses } from '../../content/courses'
 import { getCourseStats } from '../../lib/courseProgress'
-
-function ProgressBar({ done, total }: { done: number; total: number }) {
-  const pct = total ? Math.round((done / total) * 100) : 0
-  return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-      <div
-        className="h-full rounded-full bg-emerald-500 transition-all"
-        style={{ width: `${pct}%` }}
-      />
-    </div>
-  )
-}
 
 export function CoursesPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-2xl font-bold">🎓 Курсы</h1>
-        <p className="text-slate-500">
+        <h1 className="text-2xl font-bold">Курсы</h1>
+        <p className="mt-0.5 text-sm text-slate-500">
           Уроки с проверкой знаний. Термины из уроков попадают в карточки повторения.
         </p>
       </header>
 
-      {allCourses.map((course) => {
-        const stats = getCourseStats(course)
-        return (
-          <Link key={course.id} to={`/courses/${course.id}`}>
-            <Card className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">{course.icon}</span>
+      <div className="flex flex-col gap-3">
+        {allCourses.map((course) => {
+          const stats = getCourseStats(course)
+          const done = stats.doneLessons === stats.totalLessons && stats.totalLessons > 0
+          return (
+            <Link key={course.id} to={`/courses/${course.id}`}>
+              <Card interactive className="flex items-center gap-4">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/60 text-2xl dark:from-slate-700 dark:to-slate-700/40">
+                  {course.icon}
+                </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold">{course.title}</p>
-                  <p className="mt-0.5 text-sm text-slate-500">{course.description}</p>
+                  <p className="font-bold">{course.title}</p>
+                  <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                    {course.description}
+                  </p>
+                  <p className="mt-1.5 text-xs font-medium tabular-nums text-slate-400">
+                    Пройдено {stats.doneLessons} из {stats.totalLessons} уроков
+                  </p>
                 </div>
-              </div>
-              <ProgressBar done={stats.doneLessons} total={stats.totalLessons} />
-              <p className="text-xs text-slate-400">
-                Пройдено {stats.doneLessons} из {stats.totalLessons} уроков
-              </p>
-            </Card>
-          </Link>
-        )
-      })}
-
+                <div className="shrink-0">
+                  {done ? (
+                    <IconCheckCircle className="h-11 w-11 text-emerald-500" />
+                  ) : (
+                    <ProgressRing done={stats.doneLessons} total={stats.totalLessons} />
+                  )}
+                </div>
+              </Card>
+            </Link>
+          )
+        })}
+      </div>
     </div>
   )
 }

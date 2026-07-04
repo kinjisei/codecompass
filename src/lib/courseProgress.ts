@@ -4,8 +4,10 @@
 // копию автоматически (префикс codecompass., см. lib/backup.ts).
 // ============================================================================
 import type { Course, Lesson } from '../types'
+import { recordActivity } from './activity'
 
 const STORAGE_KEY = 'codecompass.course_progress.v1'
+const CONTINUE_KEY = 'codecompass.continue.v1'
 
 export interface LessonProgress {
   completedAt: string
@@ -33,6 +35,33 @@ export function completeLesson(lessonId: string, quizScore: number, quizTotal: n
     quizTotal,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+  recordActivity()
+}
+
+// ---------------------------------------------------------------------------
+// «Продолжить обучение»: указатель на последний открытый урок. Хранится
+// плоскими данными (без импорта контента курсов), чтобы главная страница
+// могла показать кнопку, не загружая тяжёлый чанк с уроками.
+
+export interface ContinueTarget {
+  courseId: string
+  courseIcon: string
+  courseTitle: string
+  lessonId: string
+  lessonTitle: string
+}
+
+export function setContinueTarget(target: ContinueTarget): void {
+  localStorage.setItem(CONTINUE_KEY, JSON.stringify(target))
+}
+
+export function getContinueTarget(): ContinueTarget | undefined {
+  try {
+    const raw = localStorage.getItem(CONTINUE_KEY)
+    return raw ? (JSON.parse(raw) as ContinueTarget) : undefined
+  } catch {
+    return undefined
+  }
 }
 
 export interface CourseStats {

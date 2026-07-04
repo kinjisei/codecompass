@@ -2,20 +2,34 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Card } from '../../components/Card'
 import { Button } from '../../components/Button'
+import {
+  IconArrowLeft,
+  IconCheck,
+  IconCheckCircle,
+  IconClock,
+  IconTrophy,
+  IconX,
+} from '../../components/icons'
 import { allCourses, flatLessons } from '../../content/courses'
 import { allEntries } from '../../content'
-import { completeLesson, getAllLessonProgress } from '../../lib/courseProgress'
+import {
+  completeLesson,
+  getAllLessonProgress,
+  setContinueTarget,
+} from '../../lib/courseProgress'
 import type { GlossaryEntry, Lesson, LessonBlock } from '../../types'
 
 const entryById = new Map(allEntries.map((e) => [e.id, e]))
 
-/** Цветная плашка-вставка внутри урока (совет / предостережение / практика). */
+/** Цветная плашка-вставка внутри урока (пример / совет / предостережение / практика). */
 function Callout({ label, tone, text }: { label: string; tone: 'sky' | 'emerald' | 'amber' | 'violet'; text: string }) {
   const tones = {
-    sky: 'border-sky-200 bg-sky-50 dark:border-sky-900 dark:bg-sky-950/40',
-    emerald: 'border-emerald-200 bg-emerald-50 dark:border-emerald-900 dark:bg-emerald-950/40',
-    amber: 'border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40',
-    violet: 'border-violet-200 bg-violet-50 dark:border-violet-900 dark:bg-violet-950/40',
+    sky: 'border-sky-200/80 bg-sky-50/80 dark:border-sky-900/60 dark:bg-sky-950/40',
+    emerald:
+      'border-emerald-200/80 bg-emerald-50/80 dark:border-emerald-900/60 dark:bg-emerald-950/40',
+    amber: 'border-amber-200/80 bg-amber-50/80 dark:border-amber-900/60 dark:bg-amber-950/40',
+    violet:
+      'border-violet-200/80 bg-violet-50/80 dark:border-violet-900/60 dark:bg-violet-950/40',
   }
   const labels = {
     sky: 'text-sky-700 dark:text-sky-300',
@@ -25,8 +39,8 @@ function Callout({ label, tone, text }: { label: string; tone: 'sky' | 'emerald'
   }
   return (
     <div className={`rounded-xl border p-4 ${tones[tone]}`}>
-      <p className={`text-sm font-semibold ${labels[tone]}`}>{label}</p>
-      <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+      <p className={`text-sm font-bold ${labels[tone]}`}>{label}</p>
+      <p className="mt-1.5 whitespace-pre-line text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">
         {text}
       </p>
     </div>
@@ -36,10 +50,10 @@ function Callout({ label, tone, text }: { label: string; tone: 'sky' | 'emerald'
 function BlockView({ block }: { block: LessonBlock }) {
   switch (block.type) {
     case 'h':
-      return <h2 className="mt-2 text-lg font-bold">{block.text}</h2>
+      return <h2 className="mt-3 text-lg font-bold">{block.text}</h2>
     case 'p':
       return (
-        <p className="whitespace-pre-line leading-relaxed text-slate-700 dark:text-slate-200">
+        <p className="whitespace-pre-line text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">
           {block.text}
         </p>
       )
@@ -53,7 +67,7 @@ function BlockView({ block }: { block: LessonBlock }) {
       return <Callout label="🧪 Попробуй сам" tone="violet" text={block.text} />
     case 'code':
       return (
-        <pre className="overflow-x-auto rounded-xl bg-slate-900 p-4 text-sm leading-relaxed text-slate-100">
+        <pre className="overflow-x-auto rounded-xl bg-slate-900 p-4 text-[13px] leading-relaxed text-slate-100 shadow-inner dark:bg-slate-900/80 dark:ring-1 dark:ring-slate-700">
           <code>{block.text}</code>
         </pre>
       )
@@ -108,27 +122,39 @@ function Quiz({ lesson, courseId, nextLessonId }: { lesson: Lesson; courseId: st
 
   if (finished) {
     return (
-      <Card className="text-center">
-        <p className="text-4xl">{score === total ? '🏆' : '✅'}</p>
-        <p className="mt-2 font-semibold">
+      <Card className="flex flex-col items-center gap-1 text-center">
+        <span
+          className={`flex h-14 w-14 items-center justify-center rounded-full ${
+            score === total
+              ? 'bg-amber-100 text-amber-500 dark:bg-amber-900/40'
+              : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40'
+          }`}
+        >
+          {score === total ? (
+            <IconTrophy className="h-7 w-7" />
+          ) : (
+            <IconCheck className="h-7 w-7" />
+          )}
+        </span>
+        <p className="mt-2 font-bold">
           Урок пройден! Квиз: {score} из {total}
         </p>
         {score < total && (
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="text-sm text-slate-500">
             Можно пройти квиз ещё раз — засчитается лучший результат.
           </p>
         )}
-        <div className="mt-4 flex justify-center gap-2">
-          <Button variant="secondary" onClick={reset}>
+        <div className="mt-4 flex w-full gap-2">
+          <Button variant="secondary" className="flex-1" onClick={reset}>
             Ещё раз
           </Button>
           {nextLessonId ? (
-            <Link to={`/courses/${courseId}/${nextLessonId}`}>
-              <Button>Следующий урок →</Button>
+            <Link to={`/courses/${courseId}/${nextLessonId}`} className="flex-1">
+              <Button className="w-full">Следующий урок →</Button>
             </Link>
           ) : (
-            <Link to={`/courses/${courseId}`}>
-              <Button>К курсу</Button>
+            <Link to={`/courses/${courseId}`} className="flex-1">
+              <Button className="w-full">К курсу</Button>
             </Link>
           )}
         </div>
@@ -138,20 +164,39 @@ function Quiz({ lesson, courseId, nextLessonId }: { lesson: Lesson; courseId: st
 
   return (
     <Card className="flex flex-col gap-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-        Проверь себя · {qIndex + 1} из {total}
-      </p>
-      <p className="font-semibold">{q.question}</p>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+          Проверь себя · {qIndex + 1} из {total}
+        </p>
+        <div className="flex gap-1">
+          {lesson.quiz.map((question, i) => (
+            <span
+              key={question.id}
+              className={`h-1.5 w-4 rounded-full ${
+                i < qIndex
+                  ? 'bg-emerald-500'
+                  : i === qIndex
+                    ? 'bg-sky-500'
+                    : 'bg-slate-200 dark:bg-slate-700'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+      <p className="font-semibold leading-snug">{q.question}</p>
       <div className="flex flex-col gap-2">
         {q.options.map((opt, i) => {
           let cls =
-            'border-slate-200 bg-white hover:border-sky-400 dark:border-slate-600 dark:bg-slate-900 dark:hover:border-sky-500'
+            'border-slate-200 bg-white hover:border-sky-400 active:scale-[0.99] dark:border-slate-600 dark:bg-slate-900 dark:hover:border-sky-500'
+          let mark = null
           if (selected !== null) {
             if (i === q.correct) {
               cls =
                 'border-emerald-500 bg-emerald-50 font-medium text-emerald-900 dark:bg-emerald-900/30 dark:text-emerald-200'
+              mark = <IconCheck className="h-4.5 w-4.5 shrink-0 text-emerald-500" />
             } else if (i === selected) {
               cls = 'border-red-400 bg-red-50 text-red-900 dark:bg-red-900/30 dark:text-red-200'
+              mark = <IconX className="h-4.5 w-4.5 shrink-0 text-red-400" />
             } else {
               cls = 'border-slate-200 opacity-50 dark:border-slate-600'
             }
@@ -161,9 +206,10 @@ function Quiz({ lesson, courseId, nextLessonId }: { lesson: Lesson; courseId: st
               key={i}
               onClick={() => pick(i)}
               disabled={selected !== null}
-              className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${cls}`}
+              className={`flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-150 disabled:cursor-default ${cls}`}
             >
-              {opt}
+              <span>{opt}</span>
+              {mark}
             </button>
           )
         })}
@@ -171,13 +217,13 @@ function Quiz({ lesson, courseId, nextLessonId }: { lesson: Lesson; courseId: st
       {selected !== null && (
         <>
           <div
-            className={`rounded-xl p-3 text-sm ${
+            className={`rounded-xl p-3.5 text-sm leading-relaxed ${
               selected === q.correct
                 ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200'
                 : 'bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200'
             }`}
           >
-            <p className="font-semibold">{selected === q.correct ? 'Верно!' : 'Не совсем.'}</p>
+            <p className="font-bold">{selected === q.correct ? 'Верно!' : 'Не совсем.'}</p>
             <p className="mt-1">{q.explain}</p>
           </div>
           <Button onClick={next}>{qIndex + 1 < total ? 'Дальше' : 'Завершить урок'}</Button>
@@ -196,13 +242,25 @@ export function LessonPage() {
     window.scrollTo(0, 0)
   }, [lessonId])
 
-  if (!course) return <Navigate to="/courses" replace />
-
-  const lessons = flatLessons(course)
+  const lessons = course ? flatLessons(course) : []
   const index = lessons.findIndex((l) => l.id === lessonId)
-  if (index === -1) return <Navigate to={`/courses/${course.id}`} replace />
+  const lesson = index >= 0 ? lessons[index] : undefined
 
-  const lesson = lessons[index]
+  // Запоминаем последний открытый урок — для «Продолжить обучение» на главной.
+  useEffect(() => {
+    if (!course || !lesson) return
+    setContinueTarget({
+      courseId: course.id,
+      courseIcon: course.icon,
+      courseTitle: course.title,
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+    })
+  }, [course, lesson])
+
+  if (!course) return <Navigate to="/courses" replace />
+  if (!lesson) return <Navigate to={`/courses/${course.id}`} replace />
+
   const nextLesson = lessons[index + 1]
   const mod = course.modules.find((m) => m.lessons.some((l) => l.id === lesson.id))
   const done = Boolean(getAllLessonProgress()[lesson.id])
@@ -215,21 +273,34 @@ export function LessonPage() {
     <div key={lesson.id} className="flex flex-col gap-4">
       <Link
         to={`/courses/${course.id}`}
-        className="text-sm font-medium text-sky-600 dark:text-sky-400"
+        className="flex items-center gap-1.5 text-sm font-semibold text-sky-600 dark:text-sky-400"
       >
-        ← {course.title}
+        <IconArrowLeft className="h-4 w-4" />
+        {course.title}
       </Link>
 
       <header>
-        {mod && <p className="text-sm font-medium text-sky-600 dark:text-sky-400">{mod.title}</p>}
-        <h1 className="text-2xl font-bold">{lesson.title}</h1>
-        <p className="mt-1 text-xs text-slate-400">
-          {lesson.minutes} мин чтения
-          {done && ' · пройден ✓'}
-        </p>
+        {mod && (
+          <p className="text-xs font-bold uppercase tracking-wide text-sky-600 dark:text-sky-400">
+            {mod.title}
+          </p>
+        )}
+        <h1 className="mt-1 text-2xl font-bold leading-tight">{lesson.title}</h1>
+        <div className="mt-2 flex items-center gap-3 text-xs text-slate-400">
+          <span className="flex items-center gap-1">
+            <IconClock className="h-3.5 w-3.5" />
+            {lesson.minutes} мин чтения
+          </span>
+          {done && (
+            <span className="flex items-center gap-1 font-semibold text-emerald-500">
+              <IconCheckCircle className="h-3.5 w-3.5" />
+              пройден
+            </span>
+          )}
+        </div>
       </header>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3.5">
         {lesson.blocks.map((block, i) => (
           <BlockView key={i} block={block} />
         ))}
@@ -237,21 +308,21 @@ export function LessonPage() {
 
       {terms.length > 0 && (
         <Card className="py-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
             Термины из урока
           </p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2.5 flex flex-wrap gap-2">
             {terms.map((t) => (
               <Link
                 key={t.id}
                 to={`/glossary?entry=${t.id}`}
-                className="rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 transition-colors hover:bg-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:hover:bg-sky-900/70"
+                className="rounded-full bg-sky-100 px-3 py-1.5 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:hover:bg-sky-900/70"
               >
                 {t.term}
               </Link>
             ))}
           </div>
-          <p className="mt-2 text-xs text-slate-400">
+          <p className="mt-2.5 text-xs text-slate-400">
             Эти термины уже в твоих карточках — система повторения напомнит их сама.
           </p>
         </Card>

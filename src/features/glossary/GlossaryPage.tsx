@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Card } from '../../components/Card'
+import { IconChevronRight, IconSearch } from '../../components/icons'
 import { categories, allEntries } from '../../content'
 import type { CategoryId, GlossaryEntry } from '../../types'
-
-const inputClass =
-  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-sky-500 dark:border-slate-600 dark:bg-slate-900'
 
 const entryById = new Map<string, GlossaryEntry>(allEntries.map((e) => [e.id, e]))
 
@@ -53,24 +51,31 @@ export function GlossaryPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header>
-        <h1 className="text-2xl font-bold">📚 Глоссарий</h1>
+      <header className="flex items-baseline justify-between">
+        <h1 className="text-2xl font-bold">Глоссарий</h1>
+        <span className="text-xs tabular-nums text-slate-400">
+          {filtered.length} из {allEntries.length}
+        </span>
       </header>
 
-      <input
-        className={inputClass}
-        placeholder="Поиск термина…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <div className="relative">
+        <IconSearch className="pointer-events-none absolute left-3.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
+        <input
+          className="min-h-11 w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-[15px] shadow-sm shadow-slate-900/[0.03] outline-none transition-colors placeholder:text-slate-400 focus:border-sky-500 dark:border-slate-600 dark:bg-slate-800"
+          placeholder="Поиск термина…"
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
         <button
           onClick={() => setParams({})}
-          className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+          className={`shrink-0 cursor-pointer rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
             !activeCategory
-              ? 'bg-sky-600 text-white'
-              : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
+              ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/25'
+              : 'bg-white text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
           }`}
         >
           Все
@@ -79,10 +84,10 @@ export function GlossaryPage() {
           <button
             key={c.id}
             onClick={() => setParams({ category: c.id })}
-            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+            className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
               activeCategory === c.id
-                ? 'bg-sky-600 text-white'
-                : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
+                ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/25'
+                : 'bg-white text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
             }`}
           >
             {c.icon} {c.title}
@@ -100,25 +105,34 @@ export function GlossaryPage() {
             <Card
               key={e.id}
               id={`entry-${e.id}`}
-              className="cursor-pointer scroll-mt-6"
+              interactive
+              className="scroll-mt-6 p-4"
               onClick={() => setOpenId(open ? null : e.id)}
             >
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-semibold">{e.term}</p>
-                <span className="text-slate-400">{open ? '−' : '+'}</span>
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-semibold leading-snug">{e.term}</p>
+                <IconChevronRight
+                  className={`h-4.5 w-4.5 shrink-0 text-slate-300 transition-transform duration-200 dark:text-slate-600 ${
+                    open ? 'rotate-90' : ''
+                  }`}
+                />
               </div>
-              <p className="text-sm text-slate-500">{e.short}</p>
+              <p className="mt-1 text-sm leading-relaxed text-slate-500">{e.short}</p>
               {open && (
                 <div className="mt-3 border-t border-slate-200 pt-3 text-sm dark:border-slate-700">
-                  <p className="whitespace-pre-line text-slate-700 dark:text-slate-200">
+                  <p className="whitespace-pre-line leading-relaxed text-slate-700 dark:text-slate-200">
                     {e.detail}
                   </p>
                   {e.example && (
-                    <p className="mt-2 italic text-slate-500">Пример: {e.example}</p>
+                    <p className="mt-3 rounded-xl bg-slate-100/80 p-3 italic leading-relaxed text-slate-500 dark:bg-slate-700/40 dark:text-slate-400">
+                      Пример: {e.example}
+                    </p>
                   )}
                   {related.length > 0 && (
                     <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-medium text-slate-400">Связано:</span>
+                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Связано:
+                      </span>
                       {related.map((r) => (
                         <button
                           key={r.id}
@@ -126,7 +140,7 @@ export function GlossaryPage() {
                             ev.stopPropagation()
                             goToEntry(r.id)
                           }}
-                          className="rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-700 transition-colors hover:bg-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:hover:bg-sky-900/70"
+                          className="cursor-pointer rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-200 dark:bg-sky-900/40 dark:text-sky-300 dark:hover:bg-sky-900/70"
                         >
                           {r.term}
                         </button>
@@ -139,7 +153,12 @@ export function GlossaryPage() {
           )
         })}
         {filtered.length === 0 && (
-          <p className="text-center text-slate-500">Ничего не найдено</p>
+          <Card className="py-8 text-center">
+            <p className="font-semibold text-slate-500">Ничего не найдено</p>
+            <p className="mt-1 text-sm text-slate-400">
+              Попробуй другое слово или сбрось фильтр темы.
+            </p>
+          </Card>
         )}
       </div>
     </div>

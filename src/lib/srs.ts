@@ -13,6 +13,7 @@ import {
   type Grade,
 } from 'ts-fsrs'
 import type { GlossaryEntry, Rating, ReviewState, ReviewStateName } from '../types'
+import { recordActivity } from './activity'
 
 const STORAGE_KEY = 'codecompass.review_states.v1'
 const scheduler = fsrs(generatorParameters({ enable_fuzz: true }))
@@ -117,6 +118,7 @@ export function reviewEntry(entryId: string, existing: ReviewState | undefined, 
     last_review: (next.last_review ?? now).toISOString(),
   }
   saveAll(states)
+  recordActivity()
 }
 
 export interface Progress {

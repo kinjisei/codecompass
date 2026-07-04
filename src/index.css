@@ -15,4 +15,22 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     Helvetica, Arial, sans-serif;
+  /* Убираем серую вспышку при тапе на Android — отклик даём сами (active:). */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Горизонтальные ленты (фильтры тем) — без видимого скроллбара. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Отступ под нижнюю навигацию с учётом жестовой полосы телефона. */
+.pb-nav {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+.nav-safe {
+  padding-bottom: env(safe-area-inset-bottom);
 }
