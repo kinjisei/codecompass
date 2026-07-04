@@ -42,6 +42,15 @@ export function GlossaryPage() {
     el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }, [openId, filtered])
 
+  // Переход извне на конкретный термин (например, из урока курса): /glossary?entry=<id>
+  const entryParam = params.get('entry')
+  useEffect(() => {
+    if (!entryParam) return
+    setOpenId(entryParam)
+    scrollTarget.current = entryParam
+    setParams({}, { replace: true })
+  }, [entryParam, setParams])
+
   return (
     <div className="flex flex-col gap-4">
       <header>

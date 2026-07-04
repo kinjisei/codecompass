@@ -38,14 +38,17 @@ Vercel, Google AI Studio и т.д. Цель CodeCompass — собрать вс�
 
 ```
 src/
-  types/       index.ts — Category, GlossaryEntry, Rating, ReviewState
+  types/       index.ts — Category, GlossaryEntry, Rating, ReviewState + Course/Lesson/QuizQuestion
   content/     categories.ts, vibecoding.ts, git.ts, webdev.ts, index.ts (allEntries)
-  lib/         srs.ts — FSRS поверх localStorage (getDueEntries, reviewEntry, getStats)
+               courses/ — курсы: <курс>/<модуль>.ts (уроки с квизами), index.ts (allCourses)
+  lib/         srs.ts — FSRS поверх localStorage; courseProgress.ts — прогресс уроков;
+               backup.ts — экспорт/импорт всего прогресса в JSON
   components/  Button, Card, Layout, BottomNav
-  features/    home/HomePage, glossary/GlossaryPage, cards/CardsPage
+  features/    home/HomePage, courses/ (CoursesPage, CoursePage, LessonPage),
+               glossary/GlossaryPage, cards/CardsPage, settings/SettingsPage
 ```
 
-Нижняя навигация: Главная / Глоссарий / Карточки.
+Нижняя навигация: Главная / Курсы / Глоссарий / Карточки. Настройки — шестерёнка на главной.
 
 ## Модель контента
 

@@ -25,6 +25,7 @@ import { vibePractice } from './vibe-practice'
 import { qaTools } from './qa-tools'
 import { codeReading } from './code-reading'
 import { dbDeep } from './db-deep'
+import { prompting } from './prompting'
 
 export { categories, categoryTitle } from './categories'
 
@@ -56,4 +57,5 @@ export const allEntries = [
   ...codeReading,
   ...debug,
   ...aiServices,
+  ...prompting,
 ]

@@ -173,6 +173,13 @@ export const categories: Category[] = [
     icon: '🗃️',
     description: 'Ключи, связи таблиц, JOIN, транзакции, нормализация — чтобы понимать свой Supabase, а не тыкаться наугад.',
   },
+  {
+    id: 'prompting',
+    title: 'Промпт-инжиниринг',
+    icon: '✍️',
+    description:
+      'Термины из курса промпт-инжиниринга: как устроена модель и как формулировать запросы, чтобы получать нужное.',
+  },
 ]
 
 export function categoryTitle(id: Category['id']): string {

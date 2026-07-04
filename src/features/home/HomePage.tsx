@@ -33,9 +33,14 @@ export function HomePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header>
-        <h1 className="text-2xl font-bold">🧭 CodeCompass</h1>
-        <p className="text-slate-500">Путеводитель по программированию и вайб-кодингу</p>
+      <header className="flex items-start justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-bold">🧭 CodeCompass</h1>
+          <p className="text-slate-500">Путеводитель по программированию и вайб-кодингу</p>
+        </div>
+        <Link to="/settings" aria-label="Настройки" className="text-2xl">
+          ⚙️
+        </Link>
       </header>
 
       <Card className="flex flex-col gap-3">
