@@ -1,12 +1,24 @@
+import { lazy } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { HomePage } from './features/home/HomePage'
 import { GlossaryPage } from './features/glossary/GlossaryPage'
 import { CardsPage } from './features/cards/CardsPage'
-import { CoursesPage } from './features/courses/CoursesPage'
-import { CoursePage } from './features/courses/CoursePage'
-import { LessonPage } from './features/courses/LessonPage'
-import { SettingsPage } from './features/settings/SettingsPage'
+
+// Страницы, тянущие полный контент курсов (~сотни КБ текста уроков), грузятся
+// лениво отдельным чанком — главная, глоссарий и карточки стартуют без него.
+const CoursesPage = lazy(() =>
+  import('./features/courses/CoursesPage').then((m) => ({ default: m.CoursesPage })),
+)
+const CoursePage = lazy(() =>
+  import('./features/courses/CoursePage').then((m) => ({ default: m.CoursePage })),
+)
+const LessonPage = lazy(() =>
+  import('./features/courses/LessonPage').then((m) => ({ default: m.LessonPage })),
+)
+const SettingsPage = lazy(() =>
+  import('./features/settings/SettingsPage').then((m) => ({ default: m.SettingsPage })),
+)
 
 export default function App() {
   return (

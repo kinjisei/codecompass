@@ -46,12 +46,6 @@ export function CoursesPage() {
         )
       })}
 
-      <Card className="border-dashed">
-        <p className="font-semibold text-slate-500">Скоро</p>
-        <p className="mt-1 text-sm text-slate-400">
-          💛 Эмоциональный интеллект — курс в работе, появится здесь по мере готовности.
-        </p>
-      </Card>
     </div>
   )
 }

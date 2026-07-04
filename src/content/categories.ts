@@ -187,6 +187,13 @@ export const categories: Category[] = [
     description:
       'Термины из курса про нейросети: веса, обучение, эмбеддинги, reasoning-модели, открытые веса и локальный запуск.',
   },
+  {
+    id: 'eq',
+    title: 'Эмоциональный интеллект',
+    icon: '💛',
+    description:
+      'Термины из курса EQ: четыре навыка, эмоции как сигналы, называние, триггеры, переоценка, руминация, выгорание.',
+  },
 ]
 
 export function categoryTitle(id: Category['id']): string {

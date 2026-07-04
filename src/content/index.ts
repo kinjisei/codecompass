@@ -27,6 +27,7 @@ import { codeReading } from './code-reading'
 import { dbDeep } from './db-deep'
 import { prompting } from './prompting'
 import { aiCore } from './ai-core'
+import { eq } from './eq'
 
 export { categories, categoryTitle } from './categories'
 
@@ -60,4 +61,5 @@ export const allEntries = [
   ...aiServices,
   ...prompting,
   ...aiCore,
+  ...eq,
 ]

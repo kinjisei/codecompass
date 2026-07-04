@@ -28,6 +28,7 @@ export type CategoryId =
   | 'db-deep'
   | 'prompting'
   | 'ai-core'
+  | 'eq'
 
 export interface Category {
   id: CategoryId
