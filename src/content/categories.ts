@@ -180,6 +180,13 @@ export const categories: Category[] = [
     description:
       'Термины из курса промпт-инжиниринга: как устроена модель и как формулировать запросы, чтобы получать нужное.',
   },
+  {
+    id: 'ai-core',
+    title: 'Нейросети и LLM изнутри',
+    icon: '🧠',
+    description:
+      'Термины из курса про нейросети: веса, обучение, эмбеддинги, reasoning-модели, открытые веса и локальный запуск.',
+  },
 ]
 
 export function categoryTitle(id: Category['id']): string {

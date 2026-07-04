@@ -27,6 +27,7 @@ export type CategoryId =
   | 'code-reading'
   | 'db-deep'
   | 'prompting'
+  | 'ai-core'
 
 export interface Category {
   id: CategoryId

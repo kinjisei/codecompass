@@ -26,6 +26,7 @@ import { qaTools } from './qa-tools'
 import { codeReading } from './code-reading'
 import { dbDeep } from './db-deep'
 import { prompting } from './prompting'
+import { aiCore } from './ai-core'
 
 export { categories, categoryTitle } from './categories'
 
@@ -58,4 +59,5 @@ export const allEntries = [
   ...debug,
   ...aiServices,
   ...prompting,
+  ...aiCore,
 ]
