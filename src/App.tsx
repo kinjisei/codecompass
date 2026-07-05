@@ -3,10 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { HomePage } from './features/home/HomePage'
 import { GlossaryPage } from './features/glossary/GlossaryPage'
-import { CardsPage } from './features/cards/CardsPage'
 
 // Страницы, тянущие полный контент курсов (~сотни КБ текста уроков), грузятся
-// лениво отдельным чанком — главная, глоссарий и карточки стартуют без него.
+// лениво отдельным чанком — «Путь» и «Справочник» стартуют без него.
+// «Повторение» тоже лениво: подмешивает вопросы из пройденных уроков.
+const CardsPage = lazy(() =>
+  import('./features/cards/CardsPage').then((m) => ({ default: m.CardsPage })),
+)
 const CoursesPage = lazy(() =>
   import('./features/courses/CoursesPage').then((m) => ({ default: m.CoursesPage })),
 )

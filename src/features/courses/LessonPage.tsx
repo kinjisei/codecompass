@@ -17,6 +17,7 @@ import {
   getAllLessonProgress,
   setContinueTarget,
 } from '../../lib/courseProgress'
+import { CompareBlock, FindErrorBlock, OrderBlock, PracticeBlock } from './exercises'
 import type { GlossaryEntry, Lesson, LessonBlock } from '../../types'
 
 const entryById = new Map(allEntries.map((e) => [e.id, e]))
@@ -71,7 +72,46 @@ function BlockView({ block }: { block: LessonBlock }) {
           <code>{block.text}</code>
         </pre>
       )
+    case 'compare':
+      return (
+        <CompareBlock
+          prompt={block.prompt}
+          a={block.a}
+          b={block.b}
+          better={block.better}
+          explain={block.explain}
+        />
+      )
+    case 'find-error':
+      return (
+        <FindErrorBlock
+          prompt={block.prompt}
+          fragments={block.fragments}
+          wrong={block.wrong}
+          explain={block.explain}
+        />
+      )
+    case 'order':
+      return <OrderBlock prompt={block.prompt} steps={block.steps} explain={block.explain} />
+    case 'practice':
+      return (
+        <PracticeBlock id={block.id} title={block.title} intro={block.intro} steps={block.steps} />
+      )
   }
+}
+
+/** Пометка глубины урока по принципу двух глубин (PLAN-3.0 §2). */
+function DepthBadge({ depth }: { depth?: Lesson['depth'] }) {
+  if (!depth) return null
+  return depth === 'skill' ? (
+    <span className="rounded-full bg-indigo-100 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
+      Навык
+    </span>
+  ) : (
+    <span className="rounded-full bg-slate-200/70 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-slate-500 dark:bg-slate-700/60 dark:text-slate-400">
+      Обзор
+    </span>
+  )
 }
 
 /** Квиз в конце урока: по одному вопросу, после ответа — объяснение. */
@@ -287,6 +327,7 @@ export function LessonPage() {
         )}
         <h1 className="mt-1 text-2xl font-bold leading-tight">{lesson.title}</h1>
         <div className="mt-2 flex items-center gap-3 text-xs text-slate-400">
+          <DepthBadge depth={lesson.depth} />
           <span className="flex items-center gap-1">
             <IconClock className="h-3.5 w-3.5" />
             {lesson.minutes} мин чтения

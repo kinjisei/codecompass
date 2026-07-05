@@ -35,6 +35,8 @@ export interface Category {
   title: string
   icon: string
   description: string
+  /** Справочная тема (легаси из старых проектов) — не входит в учебный путь. */
+  reference?: boolean
 }
 
 export interface GlossaryEntry {
@@ -87,12 +89,52 @@ export type LessonBlock =
   | { type: 'warn'; text: string } // ⚠️ частая ошибка / предостережение
   | { type: 'try'; text: string } // 🧪 «попробуй сам» — практика
   | { type: 'code'; text: string } // промпт или код моноширинным шрифтом
+  // --- интерактивные упражнения (движок 3.0) ---
+  | {
+      /** «Какой вариант лучше»: два варианта, выбор, разбор. */
+      type: 'compare'
+      prompt: string
+      a: string
+      b: string
+      better: 'a' | 'b'
+      explain: string
+    }
+  | {
+      /** «Найди проблему»: фрагменты текста, один — проблемный. */
+      type: 'find-error'
+      prompt: string
+      fragments: string[]
+      /** Индекс проблемного фрагмента. */
+      wrong: number
+      explain: string
+    }
+  | {
+      /** «Расставь по порядку»: steps даны в ПРАВИЛЬНОМ порядке, UI перемешивает. */
+      type: 'order'
+      prompt: string
+      steps: string[]
+      explain?: string
+    }
+  | {
+      /** Практикум-чеклист: реальное задание, отметки шагов сохраняются. */
+      type: 'practice'
+      /** Уникальный id для сохранения прогресса (префикс урока). */
+      id: string
+      title: string
+      intro?: string
+      steps: string[]
+    }
 
 export interface Lesson {
   id: string
   title: string
   /** Честная оценка времени чтения в минутах. */
   minutes: number
+  /**
+   * Глубина по принципу двух глубин (PLAN-3.0 §2):
+   * 'overview' — AI делает, тебе понимать контекст; 'skill' — твоя зона, до навыка.
+   */
+  depth?: 'overview' | 'skill'
   blocks: LessonBlock[]
   /** 3-5 вопросов в конце урока. */
   quiz: QuizQuestion[]

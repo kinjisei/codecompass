@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom'
 import { IconCards, IconCourses, IconGlossary, IconHome } from './icons'
 
 const tabs = [
-  { to: '/', label: 'Главная', Icon: IconHome, end: true },
+  { to: '/', label: 'Путь', Icon: IconHome, end: true },
   { to: '/courses', label: 'Курсы', Icon: IconCourses, end: false },
-  { to: '/glossary', label: 'Глоссарий', Icon: IconGlossary, end: false },
-  { to: '/cards', label: 'Карточки', Icon: IconCards, end: false },
+  { to: '/cards', label: 'Повторение', Icon: IconCards, end: false },
+  { to: '/glossary', label: 'Справочник', Icon: IconGlossary, end: false },
 ]
 
 export function BottomNav() {

@@ -35,12 +35,14 @@ export const categories: Category[] = [
     icon: '📱',
     description:
       'Второй большой мир, кроме веба: Dart, виджеты, BLoC, кодогенерация — из твоих мобильных проектов.',
+    reference: true,
   },
   {
     id: 'mobile-publish',
     title: 'Публикация мобильных приложений',
     icon: '🚀',
     description: 'Версии, подпись сборки, Gradle, TestFlight — путь от кода до магазина приложений.',
+    reference: true,
   },
   {
     id: 'patterns',
@@ -54,6 +56,7 @@ export const categories: Category[] = [
     title: 'Алгоритмы и обработка данных',
     icon: '🧮',
     description: 'Как программы распознают рисунки и «понимают» неточный текст — реальные примеры из твоих проектов.',
+    reference: true,
   },
   {
     id: 'testing',
@@ -86,6 +89,7 @@ export const categories: Category[] = [
     icon: '🤖',
     description:
       'Другой путь для телефона — настоящее приложение из Google Play. Чем отличается от PWA и когда его выбирают.',
+    reference: true,
   },
   {
     id: 'ai-services',

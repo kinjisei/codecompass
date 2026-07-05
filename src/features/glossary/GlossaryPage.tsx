@@ -52,7 +52,7 @@ export function GlossaryPage() {
   return (
     <div className="flex flex-col gap-4">
       <header className="flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold">Глоссарий</h1>
+        <h1 className="text-2xl font-bold">Справочник</h1>
         <span className="text-xs tabular-nums text-slate-400">
           {filtered.length} из {allEntries.length}
         </span>
@@ -80,19 +80,24 @@ export function GlossaryPage() {
         >
           Все
         </button>
-        {categories.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => setParams({ category: c.id })}
-            className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-              activeCategory === c.id
-                ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/25'
-                : 'bg-white text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
-            }`}
-          >
-            {c.icon} {c.title}
-          </button>
-        ))}
+        {/* Учебные темы — первыми, справочные (легаси) — в конце ленты, приглушённые. */}
+        {[...categories.filter((c) => !c.reference), ...categories.filter((c) => c.reference)].map(
+          (c) => (
+            <button
+              key={c.id}
+              onClick={() => setParams({ category: c.id })}
+              className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+                activeCategory === c.id
+                  ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/25'
+                  : c.reference
+                    ? 'bg-slate-100 text-slate-400 ring-1 ring-slate-200 dark:bg-slate-800/60 dark:text-slate-500 dark:ring-slate-700'
+                    : 'bg-white text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700'
+              }`}
+            >
+              {c.icon} {c.title}
+            </button>
+          ),
+        )}
       </div>
 
       <div className="flex flex-col gap-2">

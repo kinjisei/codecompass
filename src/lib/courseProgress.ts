@@ -35,7 +35,7 @@ export function completeLesson(lessonId: string, quizScore: number, quizTotal: n
     quizTotal,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
-  recordActivity()
+  recordActivity('lesson')
 }
 
 // ---------------------------------------------------------------------------

@@ -13,6 +13,7 @@ export const m1: CourseModule = {
       id: 'pr-1-1',
       title: 'Что LLM делает на самом деле',
       minutes: 6,
+      depth: 'overview',
       blocks: [
         {
           type: 'p',
@@ -112,6 +113,7 @@ export const m1: CourseModule = {
       id: 'pr-1-2',
       title: 'Токены и контекстное окно: память модели',
       minutes: 7,
+      depth: 'overview',
       blocks: [
         {
           type: 'p',
@@ -214,6 +216,7 @@ export const m1: CourseModule = {
       id: 'pr-1-3',
       title: 'Температура: регулятор случайности',
       minutes: 6,
+      depth: 'overview',
       blocks: [
         {
           type: 'p',
@@ -320,6 +323,7 @@ export const m1: CourseModule = {
       id: 'pr-1-4',
       title: 'Галлюцинации: почему модель уверенно ошибается',
       minutes: 7,
+      depth: 'skill',
       blocks: [
         {
           type: 'p',
