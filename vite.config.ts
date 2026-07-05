@@ -12,14 +12,20 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'CodeCompass — путеводитель по коду',
+        id: '/',
+        name: 'CodeCompass — путь в код и не только',
         short_name: 'CodeCompass',
         description:
-          'Термины и практика по программированию, Git, вайб-кодингу и веб-разработке',
+          'Курсы с практикой и карточки повторения: вайб-кодинг, как устроен код, QA, промпт-инжиниринг, нейросети и эмоциональный интеллект.',
         theme_color: '#0ea5e9',
         background_color: '#0b1220',
         display: 'standalone',
         start_url: '/',
+        scope: '/',
+        lang: 'ru',
+        dir: 'ltr',
+        orientation: 'portrait',
+        categories: ['education', 'productivity'],
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -28,6 +34,13 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
+          },
+          {
+            // 512-я иконка как «any» — PWABuilder/TWA использует её для лаунчер-иконки
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any',
           },
         ],
       },

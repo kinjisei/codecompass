@@ -43,4 +43,20 @@ if (import.meta.env.DEV) {
       }
     }
   })
+
+  // Dev-проверка сквозных ссылок: каждый termId урока должен вести на
+  // существующий термин глоссария, иначе чип «Термины из урока» молча не
+  // отрисуется. Ловим битые ссылки при разработке, а не глазами в браузере.
+  import('../index').then(({ allEntries }) => {
+    const ids = new Set(allEntries.map((e) => e.id))
+    for (const course of allCourses) {
+      for (const lesson of flatLessons(course)) {
+        for (const termId of lesson.termIds ?? []) {
+          if (!ids.has(termId)) {
+            console.warn(`[links] ${lesson.id}: termId "${termId}" не найден в глоссарии`)
+          }
+        }
+      }
+    }
+  })
 }
