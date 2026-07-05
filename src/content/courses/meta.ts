@@ -30,10 +30,13 @@ export type PathEntry = PathCourse | PathComingSoon
 /** Рекомендованный порядок пути (PLAN-3.0). Заглушки «скоро» — будущие треки. */
 export const learningPath: PathEntry[] = [
   {
-    kind: 'soon',
+    kind: 'course',
+    id: 'vibecode',
     icon: '🚀',
     title: 'Вайб-кодинг: от идеи до продукта',
-    short: 'Флагманский трек-навык: постановка задач, git, деплой, безопасность. В работе.',
+    short: 'Флагманский трек-навык: требования, задачи AI, git, деплой, данные, безопасность.',
+    total: 30,
+    prefix: 'vcode-',
   },
   {
     kind: 'course',
@@ -54,16 +57,22 @@ export const learningPath: PathEntry[] = [
     prefix: 'ai-',
   },
   {
-    kind: 'soon',
+    kind: 'course',
+    id: 'code',
     icon: '💻',
     title: 'Как устроен код',
-    short: 'Обзорный трек: читать и понимать то, что пишет AI. В работе.',
+    short: 'Обзорный трек: читать и понимать то, что пишет AI.',
+    total: 26,
+    prefix: 'code-',
   },
   {
-    kind: 'soon',
+    kind: 'course',
+    id: 'qa-pro',
     icon: '🐞',
     title: 'QA: профессия',
-    short: 'Трек-навык: тест-дизайн, API-тестирование, процессы. В работе.',
+    short: 'Трек-навык: мышление о рисках, тест-дизайн, API-тестирование, процессы, AI в QA.',
+    total: 22,
+    prefix: 'qap-',
   },
   {
     kind: 'course',

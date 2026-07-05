@@ -29,6 +29,8 @@ export type CategoryId =
   | 'prompting'
   | 'ai-core'
   | 'eq'
+  | 'vibecode'
+  | 'qa-pro'
 
 export interface Category {
   id: CategoryId

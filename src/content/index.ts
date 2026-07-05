@@ -28,6 +28,8 @@ import { dbDeep } from './db-deep'
 import { prompting } from './prompting'
 import { aiCore } from './ai-core'
 import { eq } from './eq'
+import { vibecode } from './vibecode'
+import { qaPro } from './qa-pro'
 
 export { categories, categoryTitle } from './categories'
 
@@ -62,4 +64,6 @@ export const allEntries = [
   ...prompting,
   ...aiCore,
   ...eq,
+  ...vibecode,
+  ...qaPro,
 ]
