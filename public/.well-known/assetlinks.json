@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.codecompass_ruddy.twa",
+      "sha256_cert_fingerprints": [
+        "C8:5E:99:5A:D4:DA:BB:B8:6E:12:62:32:51:70:8C:FF:AD:B2:65:8A:79:EF:AC:8E:70:F6:75:C2:EE:9E:7A:7D"
+      ]
+    }
+  }
+]
